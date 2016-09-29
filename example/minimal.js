@@ -1,13 +1,13 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { route, Provider, Link } from '../src';
+import { Router, Hash, route, Provider, Link } from '../src';
 
 function fetchTodos() {
-
+  console.log('fetch');
 }
 
 function fetchTodo(id) {
-
+  console.log(id);
 }
 
 
@@ -60,15 +60,27 @@ class TodoForm extends React.Component {
 
 }
 
-function App(props) {
-  const { routes } = props;
+class App extends React.Component {
 
-  // use routing views
-  return (
-    <div>
-      <Provider routes={routes} {...props} />
-    </div>
-  );
+  constructor(props) {
+    super(props);
+    props.router.listen(href => {
+      this.setState({
+        href
+      });
+    });
+  }
+
+  render() {
+    const { router } = this.props;
+
+    // use routing views
+    return (
+      <div>
+        <Provider router={router} {...this.props} />
+      </div>
+    );
+  }
 }
 
 // define routing
@@ -78,8 +90,10 @@ const routes = [
   route('/todos/:id', TodoForm, fetchTodo)
 ];
 
+const router = new Router(Hash, routes);
+router.start();
 
 render(
-  <App routes={routes} todos={[]} />,
+  <App router={router} todos={[]} />,
   document.getElementById('app')
 );

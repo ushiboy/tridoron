@@ -19,6 +19,7 @@
     "react-dom": "^15.3.2"
   },
   "dependencies": {
+    "path-to-regexp": "^1.5.3",
     "react": "^15.3.2"
   }
 }
