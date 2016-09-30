@@ -41,6 +41,7 @@ export class Router {
 
   start() {
     this._engine.start();
+    this.navigateTo(this.getPath());
   }
 
   listen(listener) {
