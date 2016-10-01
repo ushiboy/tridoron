@@ -30,6 +30,12 @@ export class Hash {
 
 export class Router {
 
+  get provider() {
+    return (props) => {
+      return <Provider router={this} {...props} />;
+    };
+  }
+
   constructor(engine, routes) {
     this._engine = new engine(() => {
       if (this._listener) {

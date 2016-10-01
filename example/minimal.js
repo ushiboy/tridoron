@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, Hash, route, Provider, Link } from '../src';
+import { Router, Hash, route, Link } from '../src';
 
 function fetchTodos() {
   console.log('fetch');
@@ -45,7 +45,7 @@ class TodoForm extends React.Component {
   render() {
     return (
       <div>
-        <Link href="/todos">Back</Link>
+        <Link href="/">Back</Link>
         <form onSubmit={this.handleSubmit}>
           <input type="text" />
           <button type="submit">Save</button>
@@ -73,19 +73,14 @@ class App extends React.Component {
 
   render() {
     const { router } = this.props;
-
     // use routing views
-    return (
-      <div>
-        <Provider router={router} {...this.props} />
-      </div>
-    );
+    return <router.provider {...this.props} />;
   }
 }
 
 // define routing
 const routes = [
-  route('/todos', TodoList, fetchTodos),
+  route('/', TodoList, fetchTodos),
   route('/todos/new', TodoForm),
   route('/todos/:id', TodoForm, fetchTodo)
 ];
