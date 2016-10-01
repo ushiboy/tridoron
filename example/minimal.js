@@ -1,15 +1,35 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Router, Hash, route, Link } from '../src';
+import { EventEmitter } from 'fbemitter';
 
-function fetchTodos() {
-  console.log('fetch');
+class Store extends EventEmitter {
+
+  constructor(dispatcher) {
+    super();
+    this._state = {
+      todos: [],
+      editTodo: {}
+    };
+    dispatcher.addListener('loadTodos', this.handleLoadTodos.bind(this));
+    dispatcher.addListener('loadTodo', this.handleLoadTodo.bind(this));
+  }
+
+  getState() {
+    return this._state;
+  }
+
+  handleLoadTodos(todos) {
+    this._state.todos = todos;
+    this.emit('change');
+  }
+
+  handleLoadTodo(todo) {
+    this._state.editTodo = todo;
+    this.emit('change');
+  }
+
 }
-
-function fetchTodo(id) {
-  console.log(id);
-}
-
 
 class TodoList extends React.Component {
 
@@ -39,19 +59,29 @@ class TodoForm extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = props.editTodo;
+    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   render() {
+    const { title } = this.state;
     return (
       <div>
         <Link href="/">Back</Link>
         <form onSubmit={this.handleSubmit}>
-          <input type="text" />
+          <input type="text" name="title" value={title} onChange={this.handleChange} />
           <button type="submit">Save</button>
         </form>
       </div>
     );
+  }
+
+  handleChange(e) {
+    const { name, value } = e.target;
+    this.setState({
+      [name]: value
+    });
   }
 
   handleSubmit(e) {
@@ -64,31 +94,67 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    props.router.listen(href => {
-      this.setState({
-        href
-      });
+    const { store } = props;
+    this.state = store.getState();
+    store.addListener('change', () => {
+      this.setState(store.getState());
     });
   }
 
   render() {
     const { router } = this.props;
     // use routing views
-    return <router.provider {...this.props} />;
+    return <router.provider {...this.state} />;
   }
+}
+
+const dispatcher = new EventEmitter();
+const store = new Store(dispatcher);
+
+function fetchTodos() {
+  dispatcher.emit('loadTodos', [
+    {
+      id: 1,
+      title: 'test'
+    }
+  ]);
+}
+
+function newTodo() {
+  dispatcher.emit('loadTodo',
+    {
+      title: ''
+    }
+  );
+}
+
+function fetchTodo(id) {
+  dispatcher.emit('loadTodo',
+    {
+      id: 1,
+      title: 'test'
+    }
+  );
+}
+
+function saveTodo(todo) {
+
 }
 
 // define routing
 const routes = [
   route('/', TodoList, fetchTodos),
-  route('/todos/new', TodoForm),
+  route('/todos/new', TodoForm, newTodo),
   route('/todos/:id', TodoForm, fetchTodo)
 ];
 
 const router = new Router(Hash, routes);
+router.listen(href => {
+  dispatcher.emit('changeHref', href);
+});
 router.start();
 
 render(
-  <App router={router} todos={[]} />,
+  <App router={router} store={store} />,
   document.getElementById('app')
 );

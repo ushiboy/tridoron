@@ -1,10 +1,12 @@
 import React from 'react';
 import pathToRegexp from 'path-to-regexp';
+import { EventEmitter } from 'fbemitter';
 
-export class Hash {
+export class Hash extends EventEmitter {
 
   constructor(handler) {
-    this._handler = handler;
+    super();
+    this.addListener('change', handler);
     this.handleHashChange = this.handleHashChange.bind(this);
   }
 
@@ -13,16 +15,14 @@ export class Hash {
   }
 
   handleHashChange(e) {
-    if (this._handler) {
-      this._handler(this.getPath());
-    }
+    this.emit('change', this.getCurrentPath());
   }
 
   navigateTo(path) {
     location.hash = path;
   }
 
-  getPath() {
+  getCurrentPath() {
     return location.hash.slice(1) || '/';
   }
 
@@ -37,21 +37,20 @@ export class Router {
   }
 
   constructor(engine, routes) {
-    this._engine = new engine(() => {
-      if (this._listener) {
-        this._listener();
-      }
+    this._events = new EventEmitter();
+    this._engine = new engine(href => {
+      this._events.emit('change', href);
     });
     this._routes = routes;
   }
 
   start() {
     this._engine.start();
-    this.navigateTo(this.getPath());
+    this.navigateTo(this.getCurrentPath());
   }
 
   listen(listener) {
-    this._listener = listener;
+    this._events.addListener('change', listener);
   }
 
   match(path) {
@@ -63,23 +62,23 @@ export class Router {
     return navigateTo(path, this._routes);
   }
 
-  getPath() {
-    return this._engine.getPath();
+  getCurrentPath() {
+    return this._engine.getCurrentPath();
   }
 
   getCurrentRoute() {
-    return this.match(this.getPath());
+    return this.match(this.getCurrentPath());
   }
 
 }
 
-export function route(path, component, action) {
+export function route(path, component, handler) {
   const matcher = pathToRegexp(path);
   return {
     path,
     matcher,
     component,
-    action
+    handler
   };
 }
 
@@ -98,9 +97,9 @@ export function match(path, routes) {
 export function navigateTo(path, routes) {
   const matched = match(path, routes);
   if (matched) {
-    const { args, action } = matched;
-    if (action) {
-      action.apply(action, args);
+    const { args, handler } = matched;
+    if (handler) {
+      handler.apply(handler, args);
     }
   }
 }
