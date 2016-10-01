@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build_example": "browserify example/minimal.js -t [ babelify --presets [ es2015 react ] ] -d -o example/minimal-bundle.js"
+    "build_example": "browserify example/hash.js -t [ babelify --presets [ es2015 react ] ] -d -o example/hash-bundle.js"
   },
   "author": "ushiboy",
   "license": "MIT",
