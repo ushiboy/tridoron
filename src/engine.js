@@ -26,3 +26,28 @@ export class Hash extends EventEmitter {
 
 }
 
+export class History extends EventEmitter {
+
+  constructor(handler) {
+    super();
+    this.addListener('change', handler);
+    this.handlePopState = this.handlePopState.bind(this);
+  }
+
+  start() {
+    window.addEventListener('popstate', this.handlePopState, false);
+  }
+
+  handlePopState(e) {
+    this.emit('change', this.getCurrentPath());
+  }
+
+  navigateTo(path) {
+    history.pushState(path, null, path);
+  }
+
+  getCurrentPath() {
+    return history.state;
+  }
+
+}

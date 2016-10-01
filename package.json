@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build_example": "browserify example/hash.js -t [ babelify --presets [ es2015 react ] ] -d -o example/hash-bundle.js"
+    "build_example": "browserify example/hash.js -t [ babelify --presets [ es2015 react ] ] -d -o example/hash-bundle.js && browserify example/history.js -t [ babelify --presets [ es2015 react ] ] -d -o example/history-bundle.js"
   },
   "author": "ushiboy",
   "license": "MIT",
