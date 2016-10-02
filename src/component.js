@@ -11,25 +11,33 @@ export class Router {
 
   constructor(engine, routes) {
     this._events = new EventEmitter();
-    this._engine = new engine(href => {
-      this._events.emit('change', href);
-    });
+    this._engine = new engine(this.handleEngine.bind(this));
     this._routes = routes;
+  }
+
+  handleEngine(href) {
+    const matched = this.match(href);
+    if (matched) {
+      const { args, handler } = matched;
+      if (handler) {
+        handler.apply(handler, args);
+      }
+    }
+    this._events.emit('change', href);
   }
 
   start() {
     this._engine.start();
-    this.navigateTo(this.getCurrentPath());
   }
 
   listen(listener) {
     this._events.addListener('change', listener);
   }
 
-  match(path) {
+  match(href) {
     let matched;
     const route = this._routes.find(route => {
-      matched = route.matcher.exec(path);
+      matched = route.matcher.exec(href);
       return matched != null;
     });
     if (!route) return null;
@@ -38,15 +46,8 @@ export class Router {
     });
   }
 
-  navigateTo(path) {
-    this._engine.navigateTo(path);
-    const matched = this.match(path);
-    if (matched) {
-      const { args, handler } = matched;
-      if (handler) {
-        handler.apply(handler, args);
-      }
-    }
+  navigateTo(href) {
+    this._engine.navigateTo(href);
   }
 
   getCurrentPath() {

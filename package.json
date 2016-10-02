@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "gulp",
     "build_example": "browserify example/hash.js -t [ babelify --presets [ es2015 react ] ] -d -o example/hash-bundle.js && browserify example/history.js -t [ babelify --presets [ es2015 react ] ] -d -o example/history-bundle.js"
   },
   "author": "ushiboy",
@@ -14,9 +15,13 @@
     "babel-preset-react": "^6.11.1",
     "babelify": "^7.3.0",
     "browserify": "^13.1.0",
+    "connect": "^3.5.0",
+    "connect-history-api-fallback": "^1.3.0",
     "eslint": "^3.6.1",
     "eslint-plugin-react": "^6.3.0",
-    "react-dom": "^15.3.2"
+    "gulp": "^3.9.1",
+    "react-dom": "^15.3.2",
+    "serve-static": "^1.11.1"
   },
   "dependencies": {
     "fbemitter": "^2.1.1",

@@ -10,14 +10,18 @@ export class Hash extends EventEmitter {
 
   start() {
     window.addEventListener('hashchange', this.handleHashChange, false);
+    this.navigateTo(this.getCurrentPath());
   }
 
   handleHashChange(e) {
     this.emit('change', this.getCurrentPath());
   }
 
-  navigateTo(path) {
-    location.hash = path;
+  navigateTo(href) {
+    if (this.getCurrentPath() === href) {
+      this.emit('change', this.getCurrentPath());
+    }
+    location.hash = href;
   }
 
   getCurrentPath() {
@@ -36,18 +40,20 @@ export class History extends EventEmitter {
 
   start() {
     window.addEventListener('popstate', this.handlePopState, false);
+    this.emit('change', this.getCurrentPath());
   }
 
   handlePopState(e) {
     this.emit('change', this.getCurrentPath());
   }
 
-  navigateTo(path) {
-    history.pushState(path, null, path);
+  navigateTo(href) {
+    history.pushState(href, null, href);
+    this.emit('change', href);
   }
 
   getCurrentPath() {
-    return history.state;
+    return history.state || '/';
   }
 
 }
