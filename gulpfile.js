@@ -1,10 +1,12 @@
 const gulp = require('gulp'),
   $ = require('gulp-load-plugins')(),
+  del = require('del'),
   connect = require('connect'),
   serveStatic = require('serve-static'),
   historyApiFallback = require('connect-history-api-fallback'),
   path = require('path'),
-  distDir = path.join(__dirname, 'example'),
+  exampleDir = path.join(__dirname, 'example'),
+  distDir = path.join(exampleDir, 'dist'),
   webpack = require('webpack'),
   bundler = webpack({
     entry: {
@@ -26,6 +28,8 @@ const gulp = require('gulp'),
       ]
     }
   });
+
+gulp.task('clean', del.bind(null, [distDir]));
 
 gulp.task('js', cb => {
   bundler.run((err, stats) => {
@@ -52,12 +56,14 @@ gulp.task('serve', () => {
       ],
       verbose: false
     }))
-    .use(serveStatic(distDir))
+    .use(serveStatic(exampleDir))
     .listen(port);
 });
 
 gulp.task('dev', ['js', 'serve'], () => {
-  gulp.watch('example/**/*.js', ['js']);
+  gulp.watch(['example/*.js', 'src/*.js'], ['js']);
 });
 
-gulp.task('default', ['dev']);
+gulp.task('default', ['clean'], () => {
+  gulp.start('dev');
+});
