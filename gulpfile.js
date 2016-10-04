@@ -50,8 +50,8 @@ gulp.task('serve', () => {
     .use(historyApiFallback({
       rewrites: [
         {
-          from: /(.*)-bundle.js$/,
-          to: context => `/${path.basename(context.match[0])}`
+          from: /\/dist\/(.*)-bundle.js$/,
+          to: context => context.match[0]
         }
       ],
       verbose: false
