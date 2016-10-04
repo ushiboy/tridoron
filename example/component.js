@@ -56,6 +56,7 @@ export class TodoForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    this.props.actions.saveTodo(this.state);
   }
 
 }
@@ -72,8 +73,8 @@ export class App extends React.Component {
   }
 
   render() {
-    const { router } = this.props;
+    const { router, actions } = this.props;
     // use routing views
-    return <router.provider {...this.state} />;
+    return <router.provider {...this.state} actions={actions} />;
   }
 }
