@@ -3,6 +3,7 @@ const gulp = require('gulp'),
   del = require('del'),
   connect = require('connect'),
   serveStatic = require('serve-static'),
+  connectLiveReload = require('connect-livereload'),
   historyApiFallback = require('connect-history-api-fallback'),
   path = require('path'),
   exampleDir = path.join(__dirname, 'example'),
@@ -41,12 +42,15 @@ gulp.task('js', cb => {
       chunkModules: false
     }));
     cb();
+    $.livereload.reload();
   });
 });
 
 gulp.task('serve', () => {
   const port = process.env.PORT || 3000;
+  $.livereload.listen();
   connect()
+    .use(connectLiveReload())
     .use(historyApiFallback({
       rewrites: [
         {
