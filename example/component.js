@@ -47,6 +47,10 @@ export class TodoForm extends React.Component {
     );
   }
 
+  componentWillReceiveProps(props) {
+    this.setState(props.editTodo);
+  }
+
   handleChange(e) {
     const { name, value } = e.target;
     this.setState({

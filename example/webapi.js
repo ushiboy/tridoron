@@ -50,11 +50,12 @@ export function save(todo) {
         row.title = todo.title;
         resolve(Object.assign({}, row));
       } else {
-        const index = todos.push({
+        const newRow = {
           id: ++SEQ,
           title: todo.title
-        });
-        resolve(Object.assign({}, todos[index]));
+        };
+        todos.push(newRow);
+        resolve(Object.assign({}, newRow));
       }
     }, 10);
   });
