@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from '../src';
+import { Link, Provider } from '../src';
 
 export class TodoList extends React.Component {
 
@@ -47,6 +47,10 @@ export class TodoForm extends React.Component {
     );
   }
 
+  componentWillUnmount() {
+    console.log('component will unmount');
+  }
+
   componentWillReceiveProps(props) {
     this.setState(props.editTodo);
   }
@@ -79,6 +83,7 @@ export class App extends React.Component {
   render() {
     const { router, actions } = this.props;
     // use routing views
-    return <router.provider {...this.state} actions={actions} />;
+    // return <router.provider {...this.state} actions={actions} />;
+    return <Provider router={router} actions={actions} {...this.state} />;
   }
 }
