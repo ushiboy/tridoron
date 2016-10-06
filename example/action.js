@@ -32,12 +32,17 @@ export function fetchTodo(id) {
 }
 
 export function saveTodo(todo) {
-  return dispatch => {
+  return (dispatch, navigateTo) => {
     webapi.save(todo).then(todo => {
-      dispatch({
-        type: 'saveTodo',
-        payload: todo
-      })
+      navigateTo('/');
+    });
+  };
+}
+
+export function removeTodo(todo) {
+  return (dispatch, navigateTo) => {
+    webapi.remove(todo).then(() => {
+      navigateTo('/');
     });
   };
 }

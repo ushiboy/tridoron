@@ -32,23 +32,22 @@ export class TodoForm extends React.Component {
     this.state = props.editTodo;
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleRemove = this.handleRemove.bind(this);
   }
 
   render() {
-    const { title } = this.state;
+    const { title, id } = this.state;
+    const btnRemove = id != null ? <button type="button" onClick={this.handleRemove}>Remove</button> : null;
     return (
       <div>
         <Link href="/">Back</Link>
         <form onSubmit={this.handleSubmit}>
           <input type="text" name="title" value={title} onChange={this.handleChange} />
           <button type="submit">Save</button>
+          {btnRemove}
         </form>
       </div>
     );
-  }
-
-  componentWillUnmount() {
-    console.log('component will unmount');
   }
 
   componentWillReceiveProps(props) {
@@ -60,6 +59,10 @@ export class TodoForm extends React.Component {
     this.setState({
       [name]: value
     });
+  }
+
+  handleRemove(e) {
+    this.props.actions.removeTodo(this.state);
   }
 
   handleSubmit(e) {

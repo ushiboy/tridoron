@@ -60,3 +60,16 @@ export function save(todo) {
     }, 10);
   });
 }
+
+export function remove(todo) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const row = find(todo.id);
+      if (row) {
+        const index = todos.indexOf(row);
+        todos.splice(index, 1);
+      }
+      resolve();
+    }, 10);
+  });
+}

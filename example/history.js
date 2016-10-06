@@ -9,27 +9,6 @@ import * as actions from './action';
 const dispatcher = new EventEmitter();
 const store = new Store(dispatcher);
 
-function dispatch(action) {
-  if (typeof(action) === 'function') {
-    action(({type, payload}) => {
-      dispatcher.emit(type, payload);
-    });
-  } else {
-    const { type, payload } = action;
-    dispatcher.emit(type, payload);
-  }
-}
-
-function bindActionCreators(actions, dispatch) {
-  return Object.keys(actions).reduce((result, key) => {
-    const fn = actions[key];
-    result[key] = function() {
-      return dispatch(fn.apply(fn, arguments));
-    };
-    return result;
-  }, {});
-}
-
 // define routing
 const routes = [
   route('/', TodoList, () => {
@@ -51,6 +30,33 @@ router.listen(href => {
   });
 });
 router.start();
+
+
+function navigateTo(href) {
+  router.navigateTo(href);
+}
+
+function dispatch(action) {
+  if (typeof(action) === 'function') {
+    action(({type, payload}) => {
+      dispatcher.emit(type, payload);
+    }, navigateTo);
+  } else {
+    const { type, payload } = action;
+    dispatcher.emit(type, payload);
+  }
+}
+
+function bindActionCreators(actions, dispatch) {
+  return Object.keys(actions).reduce((result, key) => {
+    const fn = actions[key];
+    result[key] = function() {
+      return dispatch(fn.apply(fn, arguments));
+    };
+    return result;
+  }, {});
+}
+
 
 const bindedActions = bindActionCreators(actions, dispatch);
 

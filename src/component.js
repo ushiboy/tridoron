@@ -11,7 +11,7 @@ export class Router {
     this._events = new EventEmitter();
     this._engine = new engine(this.handleEngine.bind(this));
     this._routes = routes;
-    this._provider = (props) => {
+    this._provider = props => {
       return <Provider router={this} {...props} />;
     };
   }
