@@ -4,15 +4,16 @@ import { EventEmitter } from 'fbemitter';
 export class Router {
 
   get provider() {
-    return (props) => {
-      return <Provider router={this} {...props} />;
-    };
+    return this._provider;
   }
 
   constructor(engine, routes) {
     this._events = new EventEmitter();
     this._engine = new engine(this.handleEngine.bind(this));
     this._routes = routes;
+    this._provider = (props) => {
+      return <Provider router={this} {...props} />;
+    };
   }
 
   handleEngine(href) {

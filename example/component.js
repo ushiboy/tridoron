@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Provider } from '../src';
+import { Link } from '../src';
 
 export class TodoList extends React.Component {
 
@@ -83,7 +83,6 @@ export class App extends React.Component {
   render() {
     const { router, actions } = this.props;
     // use routing views
-    // return <router.provider {...this.state} actions={actions} />;
-    return <Provider router={router} actions={actions} {...this.state} />;
+    return <router.provider {...this.state} actions={actions} />;
   }
 }

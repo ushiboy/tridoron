@@ -6,7 +6,10 @@ export class Store extends EventEmitter {
     super();
     this._state = {
       todos: [],
-      editTodo: {}
+      editTodo: {
+        id: null,
+        title: ''
+      }
     };
     dispatcher.addListener('loadTodos', this.handleLoadTodos.bind(this));
     dispatcher.addListener('loadTodo', this.handleLoadTodo.bind(this));
