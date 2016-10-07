@@ -51,6 +51,10 @@ export class Router {
     this._engine.navigateTo(href);
   }
 
+  replaceTo(href) {
+    this._engine.replaceTo(href);
+  }
+
   getCurrentPath() {
     return this._engine.getCurrentPath();
   }

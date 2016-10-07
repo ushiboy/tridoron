@@ -32,8 +32,12 @@ router.listen(href => {
 router.start();
 
 
-function navigateTo(href) {
-  router.navigateTo(href);
+function navigateTo(href, replace=false) {
+  if (!replace) {
+    router.navigateTo(href);
+  } else {
+    router.replaceTo(href);
+  }
 }
 
 function dispatch(action) {

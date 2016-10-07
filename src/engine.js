@@ -24,6 +24,10 @@ export class Hash extends EventEmitter {
     location.hash = href;
   }
 
+  replaceTo(href) {
+    throw new Error('Not support.');
+  }
+
   getCurrentPath() {
     return location.hash.slice(1) || '/';
   }
@@ -49,6 +53,11 @@ export class History extends EventEmitter {
 
   navigateTo(href) {
     history.pushState(href, null, href);
+    this.emit('change', href);
+  }
+
+  replaceTo(href) {
+    history.replaceState(href, null, href);
     this.emit('change', href);
   }
 

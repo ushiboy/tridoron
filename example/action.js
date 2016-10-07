@@ -42,7 +42,7 @@ export function saveTodo(todo) {
 export function removeTodo(todo) {
   return (dispatch, navigateTo) => {
     webapi.remove(todo).then(() => {
-      navigateTo('/');
+      navigateTo('/', true);
     });
   };
 }
