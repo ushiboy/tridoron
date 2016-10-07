@@ -8,47 +8,47 @@
 ```javascript
 import React from 'react';
 import render from 'react-dom';
-import { route, Provider, Link } from 'tridoron';
-
-import { fetchTodos, fetchTodo } from './todoActions';
+import { route, Router, Hash } from 'tridoron';
 
 
-function TodoList(props) {
-  return (
-    <div>
-      <Link href="/todos/new">New Todo</Link>
-    </div>
-  );
-}
+// sample app components
+import { fetchTodos, fetchTodo, newTodo } from './todoActions';
+import { TodoList, TodoForm } from './components';
+import Store from './store';
+const store = new Store();
 
-function TodoForm(props) {
-  return (
-    <div>
-    </div>
-  );
-}
 
-function App(props) {
-  const { routes } = props;
+class App extends React.Component {
 
-  // use routing views
-  return (
-    <div>
-      <Provider routes={routes} />
-    </div>
-  );
+  constructor(props) {
+    super(props);
+    const { store } = props;
+    this.state = store.getState();
+    store.addListener('change', () => {
+      this.setState(store.getState());
+    });
+  }
+
+  render() {
+    const { router } = this.props;
+    // use routing views
+    return <router.provider {...this.state} />;
+  }
 }
 
 // define routing
 const routes = [
   route('/todos', TodoList, fetchTodos),
-  route('/todos/new', TodoForm),
+  route('/todos/new', TodoForm, newTodo),
   route('/todos/:id', TodoForm, fetchTodo)
 ];
 
+// initialize router
+const router = new Router(Hash, routes);
+router.start();
 
 render(
-  <App routes={routes} />,
+  <App router={router} store={store} />,
   document.getElementById('app')
 );
 ```
