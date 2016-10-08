@@ -10,16 +10,17 @@ export class Hash extends EventEmitter {
 
   start() {
     window.addEventListener('hashchange', this.handleHashChange, false);
-    this.navigateTo(this.getCurrentPath());
+    this.navigateTo(this.getCurrentHref());
   }
 
   handleHashChange(e) {
-    this.emit('change', this.getCurrentPath());
+    this.emit('change', this.getCurrentHref());
   }
 
   navigateTo(href) {
-    if (this.getCurrentPath() === href) {
-      this.emit('change', this.getCurrentPath());
+    const currentHref = this.getCurrentHref();
+    if (currentHref === href) {
+      this.emit('change', currentHref);
     }
     location.hash = href;
   }
@@ -28,7 +29,7 @@ export class Hash extends EventEmitter {
     throw new Error('Not support.');
   }
 
-  getCurrentPath() {
+  getCurrentHref() {
     return location.hash.slice(1) || '/';
   }
 
@@ -44,11 +45,11 @@ export class History extends EventEmitter {
 
   start() {
     window.addEventListener('popstate', this.handlePopState, false);
-    this.emit('change', this.getCurrentPath());
+    this.emit('change', this.getCurrentHref());
   }
 
   handlePopState(e) {
-    this.emit('change', this.getCurrentPath());
+    this.emit('change', this.getCurrentHref());
   }
 
   navigateTo(href) {
@@ -61,8 +62,8 @@ export class History extends EventEmitter {
     this.emit('change', href);
   }
 
-  getCurrentPath() {
-    return history.state || '/';
+  getCurrentHref() {
+    return location.pathname + location.search;
   }
 
 }

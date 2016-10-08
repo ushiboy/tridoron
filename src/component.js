@@ -1,5 +1,6 @@
 import React from 'react';
 import { EventEmitter } from 'fbemitter';
+import parse from 'url-parse';
 
 export class Router {
 
@@ -19,12 +20,27 @@ export class Router {
   handleEngine(href) {
     const matched = this.match(href);
     if (matched) {
-      const { args, handler } = matched;
+      const { args, handler, query } = matched;
       if (handler) {
-        handler.apply(handler, args);
+        handler.apply(handler, args.concat(query));
       }
     }
     this._events.emit('change', href);
+  }
+
+  match(href) {
+    let matched;
+    const url = parse(href, true);
+    const { pathname, query } = url;
+    const route = this._routes.find(route => {
+      matched = route.matcher.exec(pathname);
+      return matched != null;
+    });
+    if (!route) return null;
+    return Object.assign({}, route, {
+      args: matched.slice(1),
+      query
+    });
   }
 
   start() {
@@ -35,18 +51,6 @@ export class Router {
     this._events.addListener('change', listener);
   }
 
-  match(href) {
-    let matched;
-    const route = this._routes.find(route => {
-      matched = route.matcher.exec(href);
-      return matched != null;
-    });
-    if (!route) return null;
-    return Object.assign({}, route, {
-      args: matched.slice(1)
-    });
-  }
-
   navigateTo(href) {
     this._engine.navigateTo(href);
   }
@@ -55,12 +59,12 @@ export class Router {
     this._engine.replaceTo(href);
   }
 
-  getCurrentPath() {
-    return this._engine.getCurrentPath();
+  getCurrentHref() {
+    return this._engine.getCurrentHref();
   }
 
   getCurrentRoute() {
-    return this.match(this.getCurrentPath());
+    return this.match(this.getCurrentHref());
   }
 
 }
