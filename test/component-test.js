@@ -94,17 +94,53 @@ describe('Router', () => {
 
   describe('Provider', () => {
 
-    it('should render matched component', () => {
-      jsdom.changeURL(window, 'http://localhost/');
-      const wrapper = mount(<router.provider />);
-      assert(wrapper.find('div').text() === 'root');
+    describe('Content', () => {
+
+      it('should render matched component', () => {
+        jsdom.changeURL(window, 'http://localhost/');
+        const wrapper = mount(<router.content />);
+        assert(wrapper.find('div').text() === 'root');
+      });
+
+      describe('Link', () => {
+
+        it('should accept a tag', () => {
+          jsdom.changeURL(window, 'http://localhost/foo/1');
+          const wrapper = mount(
+            <router.provider>
+              <router.content />
+            </router.provider>
+          );
+          const a = wrapper.find('a');
+          assert(a.text() === 'foo');
+          assert(a.prop('href') === '/');
+        });
+
+        it('should call router navgateTo when Link is clicked', () => {
+          jsdom.changeURL(window, 'http://localhost/foo/1');
+          const wrapper = mount(
+            <router.provider>
+              <router.content />
+            </router.provider>
+          );
+          const a = wrapper.find('a');
+          a.simulate('click');
+          assert.ok(rootHandler.calledOnce);
+        });
+
+      });
+
     });
 
     describe('Link', () => {
 
       it('should accept a tag', () => {
         jsdom.changeURL(window, 'http://localhost/foo/1');
-        const wrapper = mount(<router.provider />);
+        const wrapper = mount(
+          <router.provider>
+            <Link href="/">foo</Link>
+          </router.provider>
+        );
         const a = wrapper.find('a');
         assert(a.text() === 'foo');
         assert(a.prop('href') === '/');
@@ -112,7 +148,11 @@ describe('Router', () => {
 
       it('should call router navgateTo when Link is clicked', () => {
         jsdom.changeURL(window, 'http://localhost/foo/1');
-        const wrapper = mount(<router.provider />);
+        const wrapper = mount(
+          <router.provider>
+            <Link href="/">foo</Link>
+          </router.provider>
+        );
         const a = wrapper.find('a');
         a.simulate('click');
         assert.ok(rootHandler.calledOnce);

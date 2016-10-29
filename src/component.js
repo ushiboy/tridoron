@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Children } from 'react';
 import { EventEmitter } from 'fbemitter';
 import parse from 'url-parse';
 
@@ -8,12 +8,19 @@ export class Router {
     return this._provider;
   }
 
+  get content() {
+    return this._content;
+  }
+
   constructor(engine, routes) {
     this._events = new EventEmitter();
     this._engine = new engine(this.handleEngine.bind(this));
     this._routes = routes;
     this._provider = props => {
-      return <Provider router={this} {...props} />;
+      return <Provider router={this} {...props}>{props.children}</Provider>;
+    };
+    this._content = props => {
+      return <Content router={this} {...props} />;
     };
   }
 
@@ -83,6 +90,30 @@ export class Provider extends React.Component {
   }
 
   render() {
+    return Children.only(this.props.children)
+  }
+}
+Provider.propTypes = {
+  children: React.PropTypes.element.isRequired
+};
+Provider.childContextTypes = {
+  router: React.PropTypes.instanceOf(Router)
+};
+
+export class Content extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this._router = props.router;
+  }
+
+  getChildContext() {
+    return {
+      router: this._router
+    };
+  }
+
+  render() {
     const route = this._router.getCurrentRoute();
     if (route) {
       return (
@@ -93,7 +124,7 @@ export class Provider extends React.Component {
     }
   }
 }
-Provider.childContextTypes = {
+Content.childContextTypes = {
   router: React.PropTypes.instanceOf(Router)
 };
 
