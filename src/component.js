@@ -102,8 +102,19 @@ Provider.childContextTypes = {
 
 export class Content extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this._router = props.router;
+  }
+
+  getChildContext() {
+    return {
+      router: this._router
+    };
+  }
+
   render() {
-    const route = this.context.router.getCurrentRoute();
+    const route = this._router.getCurrentRoute();
     if (route) {
       return (
         <route.component {...this.props} />
@@ -113,7 +124,7 @@ export class Content extends React.Component {
     }
   }
 }
-Content.contextTypes = {
+Content.childContextTypes = {
   router: React.PropTypes.instanceOf(Router)
 };
 
