@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Router, History, route } from '../src';
 import { EventEmitter } from 'fbemitter';
-import { TodoList, TodoForm, App } from './component';
+import { TodoList, TodoForm, App, Help } from './component';
 import { Store } from './store';
 import * as actions from './action';
 
@@ -19,7 +19,8 @@ const routes = [
   }),
   route('/todos/:id', TodoForm, id => {
     dispatch(actions.fetchTodo(id));
-  })
+  }),
+  route('/help', Help)
 ];
 
 const router = new Router(History, routes);

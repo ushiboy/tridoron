@@ -11,6 +11,7 @@ export class Store extends EventEmitter {
         title: ''
       }
     };
+    dispatcher.addListener('changeHref', this.handleChangeHref.bind(this));
     dispatcher.addListener('loadTodos', this.handleLoadTodos.bind(this));
     dispatcher.addListener('loadTodo', this.handleLoadTodo.bind(this));
   }
@@ -26,6 +27,10 @@ export class Store extends EventEmitter {
 
   handleLoadTodo(todo) {
     this._state.editTodo = todo;
+    this.emit('change');
+  }
+
+  handleChangeHref(href) {
     this.emit('change');
   }
 

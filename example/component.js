@@ -72,6 +72,14 @@ export class TodoForm extends React.Component {
 
 }
 
+export function Help(props) {
+  return (
+    <div>
+      <h1>Help</h1>
+    </div>
+  );
+}
+
 export class App extends React.Component {
 
   constructor(props) {
@@ -86,6 +94,16 @@ export class App extends React.Component {
   render() {
     const { router, actions } = this.props;
     // use routing views
-    return <router.provider {...this.state} actions={actions} />;
+    return (
+      <router.provider>
+        <div>
+          <ul>
+            <li><Link href="/">Todo List</Link></li>
+            <li><Link href="/help">Help</Link></li>
+          </ul>
+          <router.content {...this.state} actions={actions} />
+        </div>
+      </router.provider>
+    );
   }
 }
