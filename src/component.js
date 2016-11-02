@@ -131,10 +131,10 @@ Content.childContextTypes = {
 export class Link extends React.Component {
 
   render() {
-    const { children, href } = this.props;
+    const { children, href, className, style } = this.props;
     const { router } = this.context;
     return (
-      <a href={href} onClick={e => {
+      <a href={href} className={className} style={style} onClick={e => {
         e.preventDefault();
         router.navigateTo(href);
       }}>{children}</a>
