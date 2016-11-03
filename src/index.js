@@ -1,6 +1,11 @@
 import { Hash, History } from './engine';
 import { Router, Provider, Link } from './component';
 import { route } from './route';
+import * as redux from './adapters/redux';
+
+const adapter = {
+  redux
+};
 
 export {
   Router,
@@ -8,5 +13,6 @@ export {
   Link,
   Hash,
   History,
-  route
+  route,
+  adapter
 };
