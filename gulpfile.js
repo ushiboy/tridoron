@@ -12,7 +12,8 @@ const gulp = require('gulp'),
   bundler = webpack({
     entry: {
       'hash': './example/hash.js',
-      'history': './example/history.js'
+      'history': './example/history.js',
+      'minimal': './example/minimal.js'
     },
     devtool: 'inline-source-map',
     output: {
