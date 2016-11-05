@@ -1,7 +1,7 @@
 {
   "name": "tridoron",
   "version": "0.1.0",
-  "description": "Router for React",
+  "description": "Router library for React",
   "main": "lib/index.js",
   "repository": "https://github.com/ushiboy/tridoron",
   "files": [
@@ -9,10 +9,11 @@
     "lib"
   ],
   "scripts": {
-    "start": "gulp",
+    "start": "gulp default",
+    "clean": "rm -rf lib",
     "build": "babel src --out-dir lib",
-    "build_example": "gulp js",
-    "test": "mocha --require test/setup.js test/**/*-test.js"
+    "test": "mocha --require test/setup.js test/**/*-test.js",
+    "prepublish": "npm run clean && npm run build"
   },
   "author": "ushiboy",
   "license": "MIT",
