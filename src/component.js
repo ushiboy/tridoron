@@ -142,7 +142,6 @@ export class Link extends React.Component {
   }
 
   handleClick(e) {
-    console.log(e);
     if (e.button === 1 || e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) {
       // skip
       return;
