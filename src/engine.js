@@ -2,6 +2,10 @@ import { EventEmitter } from 'fbemitter';
 
 export class Hash extends EventEmitter {
 
+  get type() {
+    return 'hash';
+  }
+
   constructor(handler) {
     super();
     this.addListener('change', handler);
@@ -36,6 +40,10 @@ export class Hash extends EventEmitter {
 }
 
 export class History extends EventEmitter {
+
+  get type() {
+    return 'history';
+  }
 
   constructor(handler) {
     super();
