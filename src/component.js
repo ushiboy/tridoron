@@ -12,6 +12,11 @@ export class Router {
     return this._content;
   }
 
+  get engineType() {
+    return this._engine.type;
+  }
+
+
   constructor(engine, routes, adapter) {
     this._events = new EventEmitter();
     this._engine = new engine(this.handleEngine.bind(this));
@@ -135,9 +140,10 @@ Content.childContextTypes = {
 export class Link extends React.Component {
 
   render() {
-    const { children } = this.props;
+    const { children, href } = this.props;
+    const linkHref = this.context.router.engineType === 'hash' ? `#${href}` : href;
     return (
-      <a {...this.props} onClick={this.handleClick.bind(this)}>{children}</a>
+      <a {...this.props} href={linkHref} onClick={this.handleClick.bind(this)}>{children}</a>
     );
   }
 
