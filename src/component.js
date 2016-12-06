@@ -17,10 +17,11 @@ export class Router {
   }
 
 
-  constructor(engine, routes, adapter) {
+  constructor(engine, routes, context, adapter) {
     this._events = new EventEmitter();
     this._engine = new engine(this.handleEngine.bind(this));
     this._routes = routes;
+    this._context = context;
     this._adapter = function() {};
     if (adapter) {
       this._adapter = adapter(this);
@@ -38,7 +39,7 @@ export class Router {
     if (matched) {
       const { args, handler, query } = matched;
       if (handler) {
-        this._adapter(handler.apply(handler, args.concat(query)));
+        this._adapter(handler.apply(handler, args.concat(query, this._context)));
       }
     }
     this._events.emit('change', href);
