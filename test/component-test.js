@@ -65,6 +65,16 @@ describe('Router', () => {
       router.navigateTo('/bar/1/baz/abc?q=2');
       assert.ok(barHandler.calledWith('1', 'abc', { q: '2'}));
     });
+
+    context('use options.environment', () => {
+      it('should call handler with environment parameters', () => {
+        const environment = 'my environment';
+        const optRouter = new Router(History, routes, { environment });
+        jsdom.changeURL(window, 'http://localhost/');
+        optRouter.navigateTo('/foo/1');
+        assert.ok(fooHandler.calledWith('1', {}, environment));
+      });
+    });
   });
 
   describe('#replaceTo()', () => {

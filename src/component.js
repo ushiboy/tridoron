@@ -16,16 +16,13 @@ export class Router {
     return this._engine.type;
   }
 
-
-  constructor(engine, routes, context, adapter) {
+  constructor(engine, routes, options={ environment:undefined, adapter:undefined }) {
     this._events = new EventEmitter();
     this._engine = new engine(this.handleEngine.bind(this));
+
     this._routes = routes;
-    this._context = context;
-    this._adapter = function() {};
-    if (adapter) {
-      this._adapter = adapter(this);
-    }
+    this._environment = options.environment;
+    this._adapter = options.adapter ? options.adapter(this) : () => {};
     this._provider = props => {
       return <Provider router={this} {...props}>{props.children}</Provider>;
     };
@@ -39,7 +36,7 @@ export class Router {
     if (matched) {
       const { args, handler, query } = matched;
       if (handler) {
-        this._adapter(handler.apply(handler, args.concat(query, this._context)));
+        this._adapter(handler.apply(handler, args.concat(query, this._environment)));
       }
     }
     this._events.emit('change', href);
