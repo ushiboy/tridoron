@@ -38,7 +38,7 @@ export class Router {
       if (handler) {
         this._adapter(handler.apply(handler, args.concat(query, this._environment)));
       } else {
-        this._adapter();
+        this._adapter(Promise.resolve());
       }
     }
     this._events.emit('change', href);
