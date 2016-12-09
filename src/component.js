@@ -37,6 +37,8 @@ export class Router {
       const { args, handler, query } = matched;
       if (handler) {
         this._adapter(handler.apply(handler, args.concat(query, this._environment)));
+      } else {
+        this._adapter(Promise.resolve());
       }
     }
     this._events.emit('change', href);
