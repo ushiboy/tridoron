@@ -8,10 +8,12 @@ export function createAdapter(store) {
     return action => {
       if (action instanceof Promise) {
         action.then(result => {
-          store.dispatch(result);
+          if (result != null) {
+            store.dispatch(result);
+          }
         });
       } else {
-        store.dispatch(action);
+        throw new Error('action should return Promise.');
       }
     };
   };
