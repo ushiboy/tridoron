@@ -41,7 +41,7 @@ export class Router {
         this._adapter(Promise.resolve());
       }
     }
-    this._events.emit('change', href);
+    this._events.emit('change', href, matched != null);
   }
 
   match(href) {
