@@ -31,6 +31,7 @@ describe('Router', () => {
   let rootHandler;
   let fooHandler;
   let barHandler;
+  let listener;
   let router;
   let routes;
 
@@ -38,12 +39,14 @@ describe('Router', () => {
     rootHandler = sinon.spy();
     fooHandler = sinon.spy();
     barHandler = sinon.spy();
+    listener = sinon.spy();
     routes = [
       route('/', RootPage, rootHandler),
       route('/foo/:id', FooPage, fooHandler),
       route('/bar/:id/baz/:name', BarPage, barHandler)
     ];
     router = new Router(History, routes);
+    router.listen(listener);
   });
 
   describe('#start()', () => {
@@ -51,6 +54,17 @@ describe('Router', () => {
       jsdom.changeURL(window, 'http://localhost/');
       router.start();
       assert.ok(rootHandler.calledOnce);
+    });
+  });
+
+  describe('#handleEngine()', () => {
+    it('should call listener when match route', () => {
+      router.handleEngine('/foo/1');
+      assert.ok(listener.calledWith('/foo/1', true));
+    });
+    it('should call listener when do not match route', () => {
+      router.handleEngine('/faa/1');
+      assert.ok(listener.calledWith('/faa/1', false));
     });
   });
 
@@ -75,6 +89,7 @@ describe('Router', () => {
         assert.ok(fooHandler.calledWith('1', {}, environment));
       });
     });
+
   });
 
   describe('#replaceTo()', () => {
