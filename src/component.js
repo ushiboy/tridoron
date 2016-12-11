@@ -63,6 +63,15 @@ export class Router {
     this._engine.start();
   }
 
+  startWith(matchedRoute) {
+    const { args, handler, query } = matchedRoute;
+    if (handler) {
+      return handler.apply(handler, args.concat(query, this._environment));
+    } else {
+      return Promise.resolve();
+    }
+  }
+
   listen(listener) {
     this._events.addListener('change', listener);
   }
