@@ -1,4 +1,4 @@
-import { Hash, History } from './engine';
+import { Hash, History, createFixedUrlEngine } from './engine';
 import { Router, Provider, Link } from './component';
 import { route } from './route';
 import * as redux from './adapters/redux';
@@ -13,6 +13,7 @@ export {
   Link,
   Hash,
   History,
+  createFixedUrlEngine,
   route,
   adapter
 };
