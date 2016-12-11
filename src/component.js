@@ -59,8 +59,8 @@ export class Router {
     });
   }
 
-  start() {
-    this._engine.start();
+  start(autoChangeFirstRoute=true) {
+    this._engine.start(autoChangeFirstRoute);
   }
 
   startWith(matchedRoute) {

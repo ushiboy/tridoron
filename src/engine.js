@@ -13,8 +13,10 @@ export class Hash extends EventEmitter {
     window.addEventListener('hashchange', this.handleHashChange, false);
   }
 
-  start() {
-    this.navigateTo(this.getCurrentHref());
+  start(autoChangeFirstRoute=true) {
+    if (autoChangeFirstRoute === true) {
+      this.navigateTo(this.getCurrentHref());
+    }
   }
 
   handleHashChange(e) {
@@ -52,8 +54,10 @@ export class History extends EventEmitter {
     window.addEventListener('popstate', this.handlePopState, false);
   }
 
-  start() {
-    this.emit('change', this.getCurrentHref());
+  start(autoChangeFirstRoute=true) {
+    if (autoChangeFirstRoute === true) {
+      this.emit('change', this.getCurrentHref());
+    }
   }
 
   handlePopState(e) {
