@@ -59,8 +59,17 @@ export class Router {
     });
   }
 
-  start() {
-    this._engine.start();
+  start(autoChangeFirstRoute=true) {
+    this._engine.start(autoChangeFirstRoute);
+  }
+
+  startWith(matchedRoute) {
+    const { args, handler, query } = matchedRoute;
+    if (handler) {
+      return handler.apply(handler, args.concat(query, this._environment));
+    } else {
+      return Promise.resolve();
+    }
   }
 
   listen(listener) {
