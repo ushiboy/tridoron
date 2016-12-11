@@ -10,10 +10,10 @@ export class Hash extends EventEmitter {
     super();
     this.addListener('change', handler);
     this.handleHashChange = this.handleHashChange.bind(this);
+    window.addEventListener('hashchange', this.handleHashChange, false);
   }
 
   start() {
-    window.addEventListener('hashchange', this.handleHashChange, false);
     this.navigateTo(this.getCurrentHref());
   }
 
@@ -49,10 +49,10 @@ export class History extends EventEmitter {
     super();
     this.addListener('change', handler);
     this.handlePopState = this.handlePopState.bind(this);
+    window.addEventListener('popstate', this.handlePopState, false);
   }
 
   start() {
-    window.addEventListener('popstate', this.handlePopState, false);
     this.emit('change', this.getCurrentHref());
   }
 
