@@ -4,6 +4,27 @@ Tridoron is a routing library for React.
 
 ## Usage
 
+### Define route
+
+```javascript
+import { route } from 'tridoron';
+
+/**
+ * route
+ * @param {String} path
+ * @param {React.Component} view
+ * @param {Function} handler (optional)
+ */
+ 
+const routes = [
+  route('/', Index),
+  route('/todos', TodoList, todosListPageHandler),
+  route('/todos/:id', TodoDetail, todoDetailPageHandler)
+];
+```
+
+## Example
+
 
 ```javascript
 import React from 'react';
