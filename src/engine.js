@@ -79,3 +79,39 @@ export class History extends EventEmitter {
   }
 
 }
+
+export function createFixedUrlEngine(url) {
+
+  class FixedUrl extends EventEmitter {
+
+    get type() {
+      return 'fixed-url';
+    }
+
+    constructor(handler) {
+      super();
+      this.addListener('change', handler);
+    }
+
+    start(autoChangeFirstRoute=true) {
+      if (autoChangeFirstRoute === true) {
+        this.emit('change', this.getCurrentHref());
+      }
+    }
+
+    navigateTo(href) {
+      throw new Error('Not support.');
+    }
+
+    replaceTo(href) {
+      throw new Error('Not support.');
+    }
+
+    getCurrentHref() {
+      return url;
+    }
+
+  }
+
+  return FixedUrl;
+}
