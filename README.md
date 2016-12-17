@@ -6,6 +6,8 @@ Tridoron is a routing library for React.
 
 ### Define route
 
+Define routing by setting path, view and handler as argument of route method.
+
 ```javascript
 import { route } from 'tridoron';
 
@@ -15,12 +17,48 @@ import { route } from 'tridoron';
  * @param {React.Component} view
  * @param {Function} handler (optional)
  */
- 
+
 const routes = [
   route('/', Index),
   route('/todos', TodoList, todosListPageHandler),
   route('/todos/:id', TodoDetail, todoDetailPageHandler)
 ];
+```
+
+### Create Router
+
+Configure the engine (History or Hash) and list of routes to create an instance of the router.
+
+```javascript
+import { Router, History } from 'tridoron';
+
+const router = new Router(History, routes);
+router.start();
+```
+
+### Render the View
+
+The render method of the main component returns <router.content>.
+
+```javascript
+import React from 'react';
+import { render } from 'react-dom';
+
+class SomeComponent extends React.Component {
+
+  render() {
+    const { router } = this.props;
+    return (
+      <router.content />
+    );
+  }
+
+}
+
+render(
+  <SomeComponent router={router} />,
+  document.getElementById('app')
+);
 ```
 
 ## Example
