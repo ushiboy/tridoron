@@ -1,7 +1,7 @@
 const assert = require('assert');
 import sinon from 'sinon';
 import jsdom from 'jsdom';
-import { Hash, History } from '../src/engine';
+import { Hash, History, createFixedUrlEngine } from '../src/engine';
 
 describe('Hash', () => {
 
@@ -23,6 +23,12 @@ describe('Hash', () => {
       const engine = new Hash(handler);
       engine.start();
       assert.ok(handler.calledOnce);
+    });
+    it('should not call handler when autoChangeFirstRoute was false', () => {
+      jsdom.changeURL(window, 'http://localhost/');
+      const engine = new Hash(handler);
+      engine.start(false);
+      assert(handler.callCount === 0);
     });
   });
 
@@ -89,6 +95,12 @@ describe('History', () => {
       engine.start();
       assert.ok(handler.calledOnce);
     });
+    it('should not call handler when autoChangeFirstRoute was false', () => {
+      jsdom.changeURL(window, 'http://localhost/');
+      const engine = new History(handler);
+      engine.start(false);
+      assert(handler.callCount === 0);
+    });
   });
 
   describe('#navigateTo()', () => {
@@ -136,6 +148,52 @@ describe('History', () => {
       jsdom.changeURL(window, 'http://localhost/path/to?hoge=1&fuga=2');
       const engine = new History(handler);
       assert(engine.getCurrentHref() === '/path/to?hoge=1&fuga=2');
+    });
+  });
+
+});
+
+describe('createFixedUrlEngine', () => {
+
+  let handler;
+  const url = '/path/to';
+  const FixedEngine = createFixedUrlEngine(url);
+
+  beforeEach(() => {
+    handler = sinon.spy();
+  });
+
+  describe('#start()', () => {
+    it('should call handler', () => {
+      const engine = new FixedEngine(handler);
+      engine.start();
+      assert.ok(handler.calledOnce);
+    });
+    it('should not call handler when autoChangeFirstRoute was false', () => {
+      jsdom.changeURL(window, 'http://localhost/');
+      const engine = new FixedEngine(handler);
+      engine.start(false);
+      assert(handler.callCount === 0);
+    });
+  });
+
+  describe('#navigateTo()', () => {
+    it('throws error', () => {
+      const engine = new FixedEngine(handler);
+      assert.throws(() => { engine.navigateTo('/path'); }, e => { assert(e.message === 'Not support.'); return true; });
+    });
+  });
+
+  describe('#replaceTo()', () => {
+    it('throws error', () => {
+      const engine = new FixedEngine(handler);
+      assert.throws(() => { engine.replaceTo('/path'); }, e => { assert(e.message === 'Not support.'); return true; });
+    });
+  });
+  describe('#getCurrentHref()', () => {
+    it('should return initialize url', () => {
+      const engine = new FixedEngine(handler);
+      assert(engine.getCurrentHref() === url);
     });
   });
 

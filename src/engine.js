@@ -93,8 +93,10 @@ export function createFixedUrlEngine(url) {
       this.addListener('change', handler);
     }
 
-    start() {
-      this.emit('change', this.getCurrentHref());
+    start(autoChangeFirstRoute=true) {
+      if (autoChangeFirstRoute === true) {
+        this.emit('change', this.getCurrentHref());
+      }
     }
 
     navigateTo(href) {
