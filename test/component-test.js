@@ -60,7 +60,9 @@ describe('Router', () => {
   describe('#handleEngine()', () => {
     it('should call listener when match route', () => {
       router.handleEngine('/foo/1');
-      assert.ok(listener.calledWith('/foo/1', true));
+      return Promise.resolve().then(() =>{
+        assert.ok(listener.calledWith('/foo/1', true));
+      });
     });
     it('should call listener when do not match route', () => {
       router.handleEngine('/faa/1');

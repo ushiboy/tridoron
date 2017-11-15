@@ -23,7 +23,7 @@ export class Router {
 
     this._routes = routes;
     this._environment = options.environment;
-    this._adapter = options.adapter ? options.adapter(this) : () => {};
+    this._adapter = options.adapter ? options.adapter(this) : () => Promise.resolve();
     this._provider = props => {
       return <Provider router={this} {...props}>{props.children}</Provider>;
     };
@@ -36,13 +36,13 @@ export class Router {
     const matched = this.match(href);
     if (matched) {
       const { args, handler, query } = matched;
-      if (handler) {
-        this._adapter(handler.call(handler, args, query, this._environment));
-      } else {
-        this._adapter(Promise.resolve());
-      }
+      const fn = handler ? handler.call(handler, args, query, this._environment) : Promise.resolve();
+      this._adapter(fn).then(() => {
+        this._events.emit('change', href, true);
+      });
+    } else {
+      this._events.emit('change', href, false);
     }
-    this._events.emit('change', href, matched != null);
   }
 
   match(href) {
