@@ -1,4 +1,5 @@
 import React, { Children } from 'react';
+import PropTypes from 'prop-types';
 import { EventEmitter } from 'fbemitter';
 import parse from 'url-parse';
 
@@ -36,7 +37,7 @@ export class Router {
     if (matched) {
       const { args, handler, query } = matched;
       if (handler) {
-        this._adapter(handler.apply(handler, args.concat(query, this._environment)));
+        this._adapter(handler.call(handler, args, query, this._environment));
       } else {
         this._adapter(Promise.resolve());
       }
@@ -111,11 +112,8 @@ export class Provider extends React.Component {
     return Children.only(this.props.children)
   }
 }
-Provider.propTypes = {
-  children: React.PropTypes.element.isRequired
-};
 Provider.childContextTypes = {
-  router: React.PropTypes.instanceOf(Router)
+  router: PropTypes.instanceOf(Router)
 };
 
 export class Content extends React.Component {
@@ -143,7 +141,7 @@ export class Content extends React.Component {
   }
 }
 Content.childContextTypes = {
-  router: React.PropTypes.instanceOf(Router)
+  router: PropTypes.instanceOf(Router)
 };
 
 export class Link extends React.Component {
@@ -167,5 +165,5 @@ export class Link extends React.Component {
 
 }
 Link.contextTypes = {
-  router: React.PropTypes.instanceOf(Router)
+  router: PropTypes.instanceOf(Router)
 };

@@ -1,7 +1,7 @@
 const assert = require('assert');
 import sinon from 'sinon';
-import jsdom from 'jsdom';
 import { Hash, History, createFixedUrlEngine } from '../src/engine';
+const jsdom = require('jsdom/lib/old-api.js');
 
 describe('Hash', () => {
 
