@@ -7,7 +7,7 @@ export function createAdapter(store) {
 
     return action => {
       if (action instanceof Promise) {
-        action.then(result => {
+        return action.then(result => {
           if (result != null) {
             store.dispatch(result);
           }

@@ -1,4 +1,5 @@
 import React, { Children } from 'react';
+import PropTypes from 'prop-types';
 import { EventEmitter } from 'fbemitter';
 import parse from 'url-parse';
 
@@ -22,7 +23,7 @@ export class Router {
 
     this._routes = routes;
     this._environment = options.environment;
-    this._adapter = options.adapter ? options.adapter(this) : () => {};
+    this._adapter = options.adapter ? options.adapter(this) : () => Promise.resolve();
     this._provider = props => {
       return <Provider router={this} {...props}>{props.children}</Provider>;
     };
@@ -35,13 +36,13 @@ export class Router {
     const matched = this.match(href);
     if (matched) {
       const { args, handler, query } = matched;
-      if (handler) {
-        this._adapter(handler.apply(handler, args.concat(query, this._environment)));
-      } else {
-        this._adapter(Promise.resolve());
-      }
+      const fn = handler ? handler.call(handler, args, query, this._environment) : Promise.resolve();
+      this._adapter(fn).then(() => {
+        this._events.emit('change', href, true);
+      });
+    } else {
+      this._events.emit('change', href, false);
     }
-    this._events.emit('change', href, matched != null);
   }
 
   match(href) {
@@ -111,11 +112,8 @@ export class Provider extends React.Component {
     return Children.only(this.props.children)
   }
 }
-Provider.propTypes = {
-  children: React.PropTypes.element.isRequired
-};
 Provider.childContextTypes = {
-  router: React.PropTypes.instanceOf(Router)
+  router: PropTypes.instanceOf(Router)
 };
 
 export class Content extends React.Component {
@@ -143,7 +141,7 @@ export class Content extends React.Component {
   }
 }
 Content.childContextTypes = {
-  router: React.PropTypes.instanceOf(Router)
+  router: PropTypes.instanceOf(Router)
 };
 
 export class Link extends React.Component {
@@ -167,5 +165,5 @@ export class Link extends React.Component {
 
 }
 Link.contextTypes = {
-  router: React.PropTypes.instanceOf(Router)
+  router: PropTypes.instanceOf(Router)
 };

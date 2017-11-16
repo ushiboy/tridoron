@@ -1,11 +1,11 @@
 const assert = require('assert');
 import sinon from 'sinon';
-import jsdom from 'jsdom';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { Router, Provider, Link } from '../src/component';
 import { History } from '../src/engine';
 import { route } from '../src/route';
+const jsdom = require('jsdom/lib/old-api.js');
 
 
 function RootPage(props) {
@@ -60,7 +60,9 @@ describe('Router', () => {
   describe('#handleEngine()', () => {
     it('should call listener when match route', () => {
       router.handleEngine('/foo/1');
-      assert.ok(listener.calledWith('/foo/1', true));
+      return Promise.resolve().then(() =>{
+        assert.ok(listener.calledWith('/foo/1', true));
+      });
     });
     it('should call listener when do not match route', () => {
       router.handleEngine('/faa/1');
@@ -72,12 +74,12 @@ describe('Router', () => {
     it('should call handler', () => {
       jsdom.changeURL(window, 'http://localhost/');
       router.navigateTo('/foo/1');
-      assert.ok(fooHandler.calledWith('1'));
+      assert.ok(fooHandler.calledWith(['1']));
     });
     it('should call handler with query parameters', () => {
       jsdom.changeURL(window, 'http://localhost/');
       router.navigateTo('/bar/1/baz/abc?q=2');
-      assert.ok(barHandler.calledWith('1', 'abc', { q: '2'}));
+      assert.ok(barHandler.calledWith(['1', 'abc'], { q: '2'}));
     });
 
     context('use options.environment', () => {
@@ -86,7 +88,7 @@ describe('Router', () => {
         const optRouter = new Router(History, routes, { environment });
         jsdom.changeURL(window, 'http://localhost/');
         optRouter.navigateTo('/foo/1');
-        assert.ok(fooHandler.calledWith('1', {}, environment));
+        assert.ok(fooHandler.calledWith(['1'], {}, environment));
       });
     });
 

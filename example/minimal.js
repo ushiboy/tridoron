@@ -96,7 +96,7 @@ const routes = [
         store.set('todos', json.todos);
       });
   }),
-  route('/todos/:id', TodoDetail, id => {
+  route('/todos/:id', TodoDetail, ([id]) => {
     fetch(`/todo_${id}.json`)
       .then(r => r.json())
       .then(json => {
