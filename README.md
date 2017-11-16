@@ -15,7 +15,7 @@ import { route } from 'tridoron';
  * route
  * @param {String} path
  * @param {React.Component} view
- * @param {Function} handler (optional)
+ * @param {(args: Array<string>, query: any) => Promise<*>} handler (optional)
  */
 
 const routes = [
@@ -161,7 +161,7 @@ const routes = [
         store.set('todos', json.todos);
       });
   }),
-  route('/todos/:id', TodoDetail, id => {
+  route('/todos/:id', TodoDetail, ([id]) => {
     fetch(`/todo_${id}.json`)
       .then(r => r.json())
       .then(json => {
