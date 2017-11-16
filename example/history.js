@@ -17,7 +17,7 @@ const routes = [
   route('/todos/new', TodoForm, () => {
     dispatch(actions.newTodo());
   }),
-  route('/todos/:id', TodoForm, id => {
+  route('/todos/:id', TodoForm, ([id]) => {
     dispatch(actions.fetchTodo(id));
   }),
   route('/help', Help)
