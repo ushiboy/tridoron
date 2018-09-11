@@ -47,9 +47,9 @@
   },
   "dependencies": {
     "fbemitter": "^2.1.1",
-    "path-to-regexp": "^2.1.0",
-    "prop-types": "^15.6.0",
-    "url-parse": "^1.2.0"
+    "path-to-regexp": "^2.4.0",
+    "prop-types": "^15.6.2",
+    "url-parse": "^1.4.2"
   },
   "peerDependencies": {
     "react": "^15.0.0-0 || ^16.0.0-0"
