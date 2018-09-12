@@ -1,6 +1,6 @@
 {
   "name": "tridoron",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Router library for React",
   "main": "lib/index.js",
   "repository": "https://github.com/ushiboy/tridoron",
