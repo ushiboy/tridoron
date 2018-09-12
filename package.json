@@ -13,7 +13,8 @@
     "clean": "rm -rf lib",
     "build": "babel src --out-dir lib",
     "test": "mocha --require test/setup.js test/**/*-test.js",
-    "prepublish": "npm run clean && npm run build"
+    "prepublish": "npm run clean && npm run build",
+    "flow": "flow"
   },
   "author": "ushiboy",
   "license": "MIT",
@@ -21,6 +22,7 @@
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
+    "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
     "babel-loader": "^8.0.2",
@@ -32,6 +34,7 @@
     "enzyme-adapter-react-16": "^1.0.4",
     "eslint": "^4.11.0",
     "eslint-plugin-react": "^7.4.0",
+    "flow-bin": "^0.80.0",
     "gulp": "^3.9.1",
     "gulp-livereload": "^3.8.1",
     "gulp-load-plugins": "^1.5.0",

@@ -1,9 +1,31 @@
+/* @flow */
 import React, { Children } from 'react';
 import PropTypes from 'prop-types';
 import { EventEmitter } from 'fbemitter';
 import parse from 'url-parse';
+import { History, Hash } from './engine'
+import type { Engine } from './engine';
+import type { Route, RouteHandler } from './route';
+
+type Adapter = (router: Router) => () => Promise<void>
+
+export type RouterOptions = {
+  environment?: any,
+  adapter?: Adapter
+}
+
+type EngineClass = Class<History> | Class<Hash>
+
 
 export class Router {
+
+  _provider: (props: any) => any
+  _content: (props: any) => any
+  _engine: Engine
+  _events: EventEmitter
+  _routes: Route[]
+  _environment: any
+  _adapter: (fn: Promise<void>) => Promise<void>
 
   get provider() {
     return this._provider;
@@ -17,7 +39,11 @@ export class Router {
     return this._engine.type;
   }
 
-  constructor(engine, routes, options={ environment:undefined, adapter:undefined }) {
+  constructor(
+    engine: EngineClass,
+    routes: Route[],
+    options: RouterOptions = { environment:undefined, adapter:undefined }
+  ) {
     this._events = new EventEmitter();
     this._engine = new engine(this.handleEngine.bind(this));
 
@@ -32,7 +58,7 @@ export class Router {
     };
   }
 
-  handleEngine(href) {
+  handleEngine(href: string) {
     const matched = this.match(href);
     if (matched) {
       const { args, handler, query } = matched;
@@ -45,26 +71,30 @@ export class Router {
     }
   }
 
-  match(href) {
-    let matched;
+  match(href: string) {
+    let matched, args;
     const url = parse(href, true);
     const { pathname, query } = url;
     const route = this._routes.find(route => {
       matched = route.matcher.exec(pathname);
-      return matched != null;
+      if (matched != null) {
+        args = matched.slice(1);
+        return true;
+      }
+      return false;
     });
     if (!route) return null;
     return Object.assign({}, route, {
-      args: matched.slice(1),
+      args,
       query
     });
   }
 
-  start(autoChangeFirstRoute=true) {
+  start(autoChangeFirstRoute: boolean=true) {
     this._engine.start(autoChangeFirstRoute);
   }
 
-  startWith(matchedRoute) {
+  startWith(matchedRoute: any) {
     const { args, handler, query } = matchedRoute;
     if (handler) {
       return handler.apply(handler, args.concat(query, this._environment));
@@ -73,15 +103,15 @@ export class Router {
     }
   }
 
-  listen(listener) {
+  listen(listener: any) {
     this._events.addListener('change', listener);
   }
 
-  navigateTo(href) {
+  navigateTo(href: string) {
     this._engine.navigateTo(href);
   }
 
-  replaceTo(href) {
+  replaceTo(href: string) {
     this._engine.replaceTo(href);
   }
 
@@ -95,9 +125,16 @@ export class Router {
 
 }
 
-export class Provider extends React.Component {
+type ProviderProps = {
+  children: any,
+  router: Router
+}
 
-  constructor(props) {
+export class Provider extends React.Component<ProviderProps> {
+
+  _router: Router
+
+  constructor(props: ProviderProps) {
     super(props);
     this._router = props.router;
   }
@@ -116,9 +153,15 @@ Provider.childContextTypes = {
   router: PropTypes.instanceOf(Router)
 };
 
-export class Content extends React.Component {
+type ContentProps = {
+  router: Router
+}
 
-  constructor(props) {
+export class Content extends React.Component<ContentProps> {
+
+  _router: Router
+
+  constructor(props: ContentProps) {
     super(props);
     this._router = props.router;
   }
@@ -144,7 +187,12 @@ Content.childContextTypes = {
   router: PropTypes.instanceOf(Router)
 };
 
-export class Link extends React.Component {
+export type LinkProps = {
+  children: any,
+  href: string
+}
+
+export class Link extends React.Component<LinkProps> {
 
   render() {
     const { children, href } = this.props;
@@ -154,7 +202,7 @@ export class Link extends React.Component {
     );
   }
 
-  handleClick(e) {
+  handleClick(e: any) {
     if (e.button === 1 || e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) {
       // skip
       return;
