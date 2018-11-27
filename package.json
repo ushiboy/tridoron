@@ -1,6 +1,6 @@
 {
   "name": "tridoron",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Router library for React",
   "main": "lib/index.js",
   "repository": "https://github.com/ushiboy/tridoron",
@@ -36,7 +36,7 @@
     "eslint-plugin-react": "^7.4.0",
     "flow-bin": "^0.80.0",
     "gulp": "^3.9.1",
-    "gulp-livereload": "^3.8.1",
+    "gulp-livereload": "^4.0.1",
     "gulp-load-plugins": "^1.5.0",
     "gulp-util": "^3.0.8",
     "jsdom": "^11.3.0",
