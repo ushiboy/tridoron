@@ -61,12 +61,12 @@ describe('Router', () => {
     it('should call listener when match route', () => {
       router.handleEngine('/foo/1');
       return Promise.resolve().then(() =>{
-        assert.ok(listener.calledWith('/foo/1', true));
+        assert.ok(listener.calledWith('/foo/1', ['1'], {}, true));
       });
     });
     it('should call listener when do not match route', () => {
       router.handleEngine('/faa/1');
-      assert.ok(listener.calledWith('/faa/1', false));
+      assert.ok(listener.calledWith('/faa/1', [], {}, false));
     });
   });
 
