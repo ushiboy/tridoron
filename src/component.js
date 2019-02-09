@@ -58,6 +58,10 @@ export class Router {
     };
   }
 
+  setAdapter(adapter: Adapter) {
+    this._adapter = adapter(this);
+  }
+
   handleEngine(href: string) {
     const matched = this.match(href);
     if (matched) {
