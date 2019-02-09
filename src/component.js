@@ -64,10 +64,10 @@ export class Router {
       const { args, handler, query } = matched;
       const fn = handler ? handler.call(handler, args, query, this._environment) : Promise.resolve();
       this._adapter(fn).then(() => {
-        this._events.emit('change', href, true);
+        this._events.emit('change', href, args, query, true);
       });
     } else {
-      this._events.emit('change', href, false);
+      this._events.emit('change', href, [], {}, false);
     }
   }
 
