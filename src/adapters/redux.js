@@ -1,8 +1,8 @@
 export function createAdapter(store) {
   return router => {
 
-    router.listen(href => {
-      store.dispatch(changeRoute(href));
+    router.listen((href, args, query, match) => {
+      store.dispatch(changeRoute(href, args, query, match));
     });
 
     return action => {
@@ -19,21 +19,31 @@ export function createAdapter(store) {
   };
 }
 
-export const TRIDORON_CHANGE_ROUTE = Symbol();
+export const TRIDORON_CHANGE_ROUTE = '$$tridoron$$/CHANGE_ROUTE';
 
-export function changeRoute(href) {
+export function changeRoute(href, args, query, match) {
   return {
     type: TRIDORON_CHANGE_ROUTE,
-    payload: href
+    payload: {
+      href,
+      args,
+      query,
+      match
+    }
   };
 }
 
-export function reducer(state = { href: '' }, action) {
+export function reducer(state = { href: '', args: [], query: {}, match: false }, action) {
   switch (action.type) {
-    case TRIDORON_CHANGE_ROUTE:
+    case TRIDORON_CHANGE_ROUTE: {
+      const { href, args, query, match } = action.payload;
       return Object.assign({}, state, {
-        href: action.payload
+        href,
+        args,
+        query,
+        match
       });
+    }
     default:
       return state;
   }
