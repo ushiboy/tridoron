@@ -48,3 +48,24 @@ export function reducer(state = { href: '', args: [], query: {}, match: false },
       return state;
   }
 }
+
+
+export function initializeRouteReducerState(router) {
+  const r = router.getCurrentRoute();
+  const href = router.getCurrentHref();
+  if (r) {
+    const { args, query } = r;
+    return {
+      href,
+      args,
+      query,
+      match: true
+    };
+  }
+  return {
+    href,
+    args: [],
+    query: {},
+    match: false
+  };
+}
