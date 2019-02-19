@@ -57,6 +57,20 @@ describe('Router', () => {
     });
   });
 
+  describe('#setAdapter()', () => {
+    it('should set adapter and create adapter function', () => {
+      let createAdapterRouter;
+      const adapter = (router) => {
+        createAdapterRouter = router;
+        return () => {
+          return Promise.resolve();
+        };
+      };
+      router.setAdapter(adapter);
+      assert(createAdapterRouter === router);
+    });
+  });
+
   describe('#handleEngine()', () => {
     it('should call listener when match route', () => {
       router.handleEngine('/foo/1');
@@ -67,6 +81,23 @@ describe('Router', () => {
     it('should call listener when do not match route', () => {
       router.handleEngine('/faa/1');
       assert.ok(listener.calledWith('/faa/1', [], {}, false));
+    });
+
+    context('use options.adapter', () => {
+      it('should call adapter created function', () => {
+        const check = sinon.spy();
+        const adapter = (router) => {
+          return () => {
+            check();
+            return Promise.resolve();
+          };
+        };
+        const optRouter = new Router(History, routes, { adapter });
+        optRouter.handleEngine('/foo/1');
+        return Promise.resolve().then(() =>{
+          assert.ok(check.calledOnce);
+        });
+      });
     });
   });
 
