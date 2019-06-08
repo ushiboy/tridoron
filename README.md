@@ -180,3 +180,13 @@ render(
   document.getElementById('app')
 );
 ```
+
+## Change Log
+
+### 0.3.4-dev
+
+Update dependencies.
+
+## License
+
+MIT
