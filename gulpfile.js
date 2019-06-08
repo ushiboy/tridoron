@@ -65,10 +65,8 @@ gulp.task('serve', () => {
     .listen(port);
 });
 
-gulp.task('dev', ['js', 'serve'], () => {
-  gulp.watch(['example/*.js', 'src/*.js'], ['js']);
+gulp.task('dev', gulp.series(gulp.parallel('js', 'serve')), () => {
+  gulp.watch(['example/*.js', 'src/*.js'], gulp.task('js'));
 });
 
-gulp.task('default', ['clean'], () => {
-  gulp.start('dev');
-});
+gulp.task('default', gulp.series(gulp.parallel('clean'), gulp.task('dev')));
