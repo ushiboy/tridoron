@@ -40,7 +40,7 @@
     "gulp-livereload": "^4.0.1",
     "gulp-load-plugins": "^1.6.0",
     "gulp-util": "^3.0.8",
-    "jsdom": "^11.3.0",
+    "jsdom": "^16.5.0",
     "mocha": "^5.2.0",
     "power-assert": "^1.4.4",
     "react": "^16.1.1",
